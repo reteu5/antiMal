@@ -1,26 +1,32 @@
-#include "PEparser.h"
-#include <windows.h>
 #include <iostream>
+#include "PEParser.h"
 
 using namespace std;
+using namespace PEParse;
+
+/*int main(void) {
+	PEParser peParser = PEParser();
+	if (peParser.parsePE(_T("C:\Windows\System32\calc.exe"))) {
+		peParser.printDosHeader();
+		peParser.printNTHeader();
+	}
+
+	return 0;
+};*/
 
 
+int main(void) {
+	PEParser peParser = PEParser();
+	tstring filePath = _T("=========== INPUT DESIRED FILE PATH HERE ===========");
 
-int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        cout << "Usage: " << argv[0] << " <executable PE file's name>" << endl;
-        exit(1);
-    }
+	tcout << _T("test string\n") << endl;
+	filePath = _T("C:\\Windows\\System32\\calc.exe");
+	if (peParser.parsePE(filePath) == TRUE) {
+		peParser.printDosHeader();
+		peParser.printNTHeader();
+		tcout << filePath << endl;
+	}
+	tcout << _T("test string\n") << filePath << endl;
 
-    PEheader peFile = PEheader(argv);
-
-    if (peFile.checkAvailability(argc, argv)) {
-        //print DOSHeader
-        // 
-        //32bit 64bit check
-        //print NTHeader
-    }
-
-
-    return 0;
-}
+	return 0;
+};
