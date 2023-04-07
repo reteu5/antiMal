@@ -32,7 +32,7 @@ BOOL PEParser::parsePE(tstring filePath) {
     tstring debugmessage = _T("");
 
     clean();
-    m_peFilePath.assign(filePath.begin(), filePath.end());
+    m_peFilePath = filePath;
     debugmessage = _T("Inputted File Path : ");
     debugmessage.append(m_peFilePath);
     debug(debugmessage);
