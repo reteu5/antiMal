@@ -79,7 +79,7 @@ BOOL PEParser::printDosHeader() {
         tcout << _T("DOS signature:0x") << (WORD)m_peDosHeader->e_magic << std::endl;
         flag = TRUE;
     }
-    return TRUE;
+    return flag;
 };
 
 BOOL PEParser::printNTHeader() {
