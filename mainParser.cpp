@@ -22,8 +22,12 @@ int main(void) {
 	tcout << _T("test string\n") << endl;
 	filePath = _T("C:\\Windows\\System32\\calc.exe");
 	if (peParser.parsePE(filePath) == TRUE) {
-		peParser.printDosHeader();
-		peParser.printNTHeader();
+		if(peParser.printDosHeader() == FALSE) {
+			exit(1);
+		}
+		if(peParser.printNTHeader() == FALSE) {
+			exit(1);
+		}
 		tcout << filePath << endl;
 	}
 	tcout << _T("test string\n") << filePath << endl;
