@@ -1,7 +1,11 @@
 #include <iostream>
+#include <iomanip>
 #include <format>
+#include <sstream>
 #include "PEParser.h"
+#include "convertStrtoHex.cpp"
 using namespace PEParse;
+using std::endl;
 
 PEParser::~PEParser() {
     clean();
@@ -76,7 +80,7 @@ BOOL PEParser::printDosHeader() {
     }
     else
     {
-        tcout << _T("DOS signature:0x") << (WORD)m_peDosHeader->e_magic << std::endl;
+        tcout << _T("DOS signature:0x") << std::hex << (WORD)m_peDosHeader->e_magic << endl;
         flag = TRUE;
     }
     return flag;
@@ -109,31 +113,40 @@ BOOL PEParser::printNTHeader() {
 
 void PEParser::printNTHeader32() {
     IMAGE_NT_HEADERS32* ntHeader = (IMAGE_NT_HEADERS32*)((BYTE*)m_peBaseAddress + (WORD)m_peDosHeader->e_lfanew);
+    tcout << _T("== this is 32 bit ==") << std::endl;
 
-    tcout << _T("Machine type:0x") << (WORD)ntHeader->FileHeader.Machine << std::endl;
-    tcout << _T("Number of sections:0x") << (WORD)ntHeader->FileHeader.NumberOfSections << std::endl;
-    tcout << _T("Timestamp:0x") << (DWORD)ntHeader->FileHeader.TimeDateStamp << std::endl;
-    tcout << _T("Entry point address:0x") << (DWORD)ntHeader->OptionalHeader.AddressOfEntryPoint << std::endl;
-    tcout << _T("Image base address:0x") << (DWORD)ntHeader->OptionalHeader.ImageBase << std::endl;
-    tcout << _T("Section alignment:0x") << (DWORD)ntHeader->OptionalHeader.SectionAlignment << std::endl;
-    tcout << _T("File alignment:0x") << (DWORD)ntHeader->OptionalHeader.FileAlignment << std::endl;
-    tcout << _T("Size of image:0x") << (DWORD)ntHeader->OptionalHeader.SizeOfImage << std::endl;
-    tcout << _T("Size of headers:0x") << (DWORD)ntHeader->OptionalHeader.SizeOfHeaders << std::endl;
-    tcout << _T("Subsystem:0x") << (WORD)ntHeader->OptionalHeader.Subsystem << std::endl;
-    tcout << _T("Number of RVA and sizes:0x") << (DWORD)ntHeader->OptionalHeader.NumberOfRvaAndSizes << std::endl;
+    tcout << _T("Offset to NT Header:0x") << std::hex << (WORD)m_peDosHeader->e_lfanew << endl;
+    tcout << _T("Machine type:0x") << std::hex << (WORD)ntHeader->FileHeader.Machine << endl;
+    tcout << _T("Size of Optional Header:0x") << std::hex << ntHeader->FileHeader.SizeOfOptionalHeader << endl; //Image_OPTIONAL_HEADER32 ㄱㅜㅈㅗㅊㅔㅇㅡㅣ ㅋㅡㄱㅣ
+    tcout << _T("Number of sections:0x") << std::hex << (WORD)ntHeader->FileHeader.NumberOfSections << endl;
+    tcout << _T("Timestamp:0x") << std::hex << (DWORD)ntHeader->FileHeader.TimeDateStamp << endl;
+    tcout << _T("Entry point address:0x") << std::hex << (DWORD)ntHeader->OptionalHeader.AddressOfEntryPoint << endl;
+    tcout << _T("Image base address:0x") << std::hex << (DWORD)ntHeader->OptionalHeader.ImageBase << endl;
+    tcout << _T("Section alignment:0x") << std::hex << (DWORD)ntHeader->OptionalHeader.SectionAlignment << endl;
+    tcout << _T("File alignment:0x") << std::hex << (DWORD)ntHeader->OptionalHeader.FileAlignment << endl;
+    tcout << _T("Size of image:0x") << std::hex << (DWORD)ntHeader->OptionalHeader.SizeOfImage << endl;
+    tcout << _T("Size of headers:0x") << std::hex << (DWORD)ntHeader->OptionalHeader.SizeOfHeaders << endl;
+    tcout << _T("Subsystem:0x") << std::hex << (WORD)ntHeader->OptionalHeader.Subsystem << endl;
+    tcout << _T("Number of RVA and sizes:0x") << std::hex << (DWORD)ntHeader->OptionalHeader.NumberOfRvaAndSizes << endl;
 };
 
 void PEParser::printNTHeader64() {
     IMAGE_NT_HEADERS64* ntHeader = (IMAGE_NT_HEADERS64*)((BYTE*)m_peBaseAddress + (((IMAGE_DOS_HEADER*)m_peBaseAddress)->e_lfanew));
-    tcout << _T("Machine type:0x") << (WORD)ntHeader->FileHeader.Machine << std::endl;
-    tcout << _T("Number of sections:0x") << (WORD)ntHeader->FileHeader.NumberOfSections << std::endl;
-    tcout << _T("Timestamp:0x") << (DWORD)ntHeader->FileHeader.TimeDateStamp << std::endl;
-    tcout << _T("Entry point address:0x") << (DWORD)ntHeader->OptionalHeader.AddressOfEntryPoint << std::endl;
-    tcout << _T("Image base address:0x") << (ULONGLONG)ntHeader->OptionalHeader.ImageBase << std::endl;
-    tcout << _T("Section alignment:0x") << (DWORD)ntHeader->OptionalHeader.SectionAlignment << std::endl;
-    tcout << _T("File alignment:0x") << (DWORD)ntHeader->OptionalHeader.FileAlignment << std::endl;
-    tcout << _T("Size of image:0x") << (DWORD)ntHeader->OptionalHeader.SizeOfImage << std::endl;
-    tcout << _T("Size of headers:0x") << (DWORD)ntHeader->OptionalHeader.SizeOfHeaders << std::endl;
-    tcout << _T("Subsystem:0x") << (WORD)ntHeader->OptionalHeader.Subsystem << std::endl;
-    tcout << _T("Number of RVA and sizes:0x") << (DWORD)ntHeader->OptionalHeader.NumberOfRvaAndSizes << std::endl;
+
+    std::stringstream stream;
+    stream << (WORD)ntHeader->FileHeader.Machine;
+
+    tcout << _T("Offset to NT Header:0x") << std::hex << (WORD)m_peDosHeader->e_lfanew << endl;
+    tcout << _T("Machine type:0x") << std::hex << (WORD)ntHeader->FileHeader.Machine << endl;
+    tcout << _T("Size of Optional Header:0x") << std::hex << ntHeader->FileHeader.SizeOfOptionalHeader << endl;
+    tcout << _T("Number of sections:0x") << std::hex << (WORD)ntHeader->FileHeader.NumberOfSections << endl;
+    tcout << _T("Timestamp:0x") << std::hex << (DWORD)ntHeader->FileHeader.TimeDateStamp << endl;
+    tcout << _T("Entry point address:0x") << std::hex << (DWORD)ntHeader->OptionalHeader.AddressOfEntryPoint << endl;
+    tcout << _T("Image base address:0x") << std::hex << (ULONGLONG)ntHeader->OptionalHeader.ImageBase << endl;
+    tcout << _T("Section alignment:0x") << std::hex << (DWORD)ntHeader->OptionalHeader.SectionAlignment << endl;
+    tcout << _T("File alignment:0x") << std::hex << (DWORD)ntHeader->OptionalHeader.FileAlignment << endl;
+    tcout << _T("Size of image:0x") << std::hex << (DWORD)ntHeader->OptionalHeader.SizeOfImage << endl;
+    tcout << _T("Size of headers:0x") << std::hex << (DWORD)ntHeader->OptionalHeader.SizeOfHeaders << endl;
+    tcout << _T("Subsystem:0x") << std::hex << (WORD)ntHeader->OptionalHeader.Subsystem << endl;
+    tcout << _T("Number of RVA and sizes:0x") << std::hex << (DWORD)ntHeader->OptionalHeader.NumberOfRvaAndSizes << endl;
 };
