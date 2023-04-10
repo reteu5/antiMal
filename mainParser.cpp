@@ -19,18 +19,14 @@ int main(void) {
 	PEParser peParser = PEParser();
 	tstring filePath = _T("=========== INPUT DESIRED FILE PATH HERE ===========");
 
-	tcout << _T("test string\n") << endl;
 	filePath = _T("C:\\Windows\\System32\\calc.exe");
 	if (peParser.parsePE(filePath) == TRUE) {
-		if(peParser.printDosHeader() == FALSE) {
+		if (peParser.printDosHeader() == FALSE) {
 			exit(1);
 		}
-		if(peParser.printNTHeader() == FALSE) {
+		if (peParser.printNTHeader() == FALSE) {
 			exit(1);
 		}
-		tcout << filePath << endl;
 	}
-	tcout << _T("test string\n") << filePath << endl;
-
 	return 0;
 };
