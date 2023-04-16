@@ -3,7 +3,6 @@
 #include <format>
 #include <sstream>
 #include "PEParser.h"
-#include "convertStrtoHex.cpp"
 using namespace PEParse;
 using std::endl;
 
